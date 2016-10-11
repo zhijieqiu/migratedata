@@ -1,0 +1,643 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="cssmanagementdbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AutoReplyKeyword">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MerchantId" Type="bigint" Nullable="false" />
+          <Property Name="RuleId" Type="bigint" Nullable="false" />
+          <Property Name="Keyword" Type="nvarchar" MaxLength="64" Nullable="false" />
+          <Property Name="MatchType" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AutoReplyMessage">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MerchantId" Type="bigint" Nullable="false" />
+          <Property Name="RuleId" Type="bigint" Nullable="false" />
+          <Property Name="MsgType" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="MsgJson" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AutoReplyRegex">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MerchantId" Type="bigint" Nullable="false" />
+          <Property Name="RuleId" Type="bigint" Nullable="false" />
+          <Property Name="Regex" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AutoReplyRule">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MerchantId" Type="bigint" Nullable="false" />
+          <Property Name="Source" Type="nvarchar" MaxLength="64" />
+          <Property Name="RuleType" Type="int" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="64" />
+          <Property Name="ReplyAll" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CannedReplyAnswer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MerchantId" Type="bigint" Nullable="false" />
+          <Property Name="UserId" Type="bigint" />
+          <Property Name="CategoryName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ReplyContent" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="IsAutoReplyEnabled" Type="bit" Nullable="false" />
+          <Property Name="CreationTime" Type="datetimeoffset" Precision="7" Nullable="false" />
+          <Property Name="CS_ReplyContent" Type="nvarchar" MaxLength="32" StoreGeneratedPattern="Computed" />
+          <Property Name="Frequency" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CannedReplyQuestion">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MerchantId" Type="bigint" Nullable="false" />
+          <Property Name="UserId" Type="bigint" />
+          <Property Name="CannedReplyAnswerId" Type="bigint" Nullable="false" />
+          <Property Name="Question" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="CS_Question" Type="nvarchar" MaxLength="32" StoreGeneratedPattern="Computed" />
+          <Property Name="CreationTime" Type="datetimeoffset" Precision="7" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Merchant">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="Email" Type="nvarchar" MaxLength="100" />
+          <Property Name="Phone" Type="nvarchar" MaxLength="100" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="LanguageCode" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="CountryCode" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="TimeZoneCode" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_AutoReplyKeyword_AutoReplyRule">
+          <End Role="AutoReplyRule" Type="Self.AutoReplyRule" Multiplicity="1" />
+          <End Role="AutoReplyKeyword" Type="Self.AutoReplyKeyword" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AutoReplyRule">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AutoReplyKeyword">
+              <PropertyRef Name="RuleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AutoReplyKeyword_MerchantId">
+          <End Role="Merchant" Type="Self.Merchant" Multiplicity="1" />
+          <End Role="AutoReplyKeyword" Type="Self.AutoReplyKeyword" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Merchant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AutoReplyKeyword">
+              <PropertyRef Name="MerchantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AutoReplyMessage_AutoReplyRule">
+          <End Role="AutoReplyRule" Type="Self.AutoReplyRule" Multiplicity="1" />
+          <End Role="AutoReplyMessage" Type="Self.AutoReplyMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AutoReplyRule">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AutoReplyMessage">
+              <PropertyRef Name="RuleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AutoReplyMessage_MerchantId">
+          <End Role="Merchant" Type="Self.Merchant" Multiplicity="1" />
+          <End Role="AutoReplyMessage" Type="Self.AutoReplyMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Merchant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AutoReplyMessage">
+              <PropertyRef Name="MerchantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AutoReplyRegex_AutoReplyRule">
+          <End Role="AutoReplyRule" Type="Self.AutoReplyRule" Multiplicity="1" />
+          <End Role="AutoReplyRegex" Type="Self.AutoReplyRegex" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AutoReplyRule">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AutoReplyRegex">
+              <PropertyRef Name="RuleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AutoReplyRegex_MerchantId">
+          <End Role="Merchant" Type="Self.Merchant" Multiplicity="1" />
+          <End Role="AutoReplyRegex" Type="Self.AutoReplyRegex" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Merchant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AutoReplyRegex">
+              <PropertyRef Name="MerchantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AutoReplyRule_MerchantId">
+          <End Role="Merchant" Type="Self.Merchant" Multiplicity="1" />
+          <End Role="AutoReplyRule" Type="Self.AutoReplyRule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Merchant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AutoReplyRule">
+              <PropertyRef Name="MerchantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CannedReplyAnswer_Merchant">
+          <End Role="Merchant" Type="Self.Merchant" Multiplicity="1" />
+          <End Role="CannedReplyAnswer" Type="Self.CannedReplyAnswer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Merchant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CannedReplyAnswer">
+              <PropertyRef Name="MerchantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CannedReplyQuestion_CannedReplyAnswer">
+          <End Role="CannedReplyAnswer" Type="Self.CannedReplyAnswer" Multiplicity="1" />
+          <End Role="CannedReplyQuestion" Type="Self.CannedReplyQuestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CannedReplyAnswer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CannedReplyQuestion">
+              <PropertyRef Name="CannedReplyAnswerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CannedReplyQuestion_Merchant">
+          <End Role="Merchant" Type="Self.Merchant" Multiplicity="1" />
+          <End Role="CannedReplyQuestion" Type="Self.CannedReplyQuestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Merchant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CannedReplyQuestion">
+              <PropertyRef Name="MerchantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="cssmanagementdbModelStoreContainer">
+          <EntitySet Name="AutoReplyKeyword" EntityType="Self.AutoReplyKeyword" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AutoReplyMessage" EntityType="Self.AutoReplyMessage" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AutoReplyRegex" EntityType="Self.AutoReplyRegex" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AutoReplyRule" EntityType="Self.AutoReplyRule" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CannedReplyAnswer" EntityType="Self.CannedReplyAnswer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CannedReplyQuestion" EntityType="Self.CannedReplyQuestion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Merchant" EntityType="Self.Merchant" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_AutoReplyKeyword_AutoReplyRule" Association="Self.FK_AutoReplyKeyword_AutoReplyRule">
+            <End Role="AutoReplyRule" EntitySet="AutoReplyRule" />
+            <End Role="AutoReplyKeyword" EntitySet="AutoReplyKeyword" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AutoReplyKeyword_MerchantId" Association="Self.FK_AutoReplyKeyword_MerchantId">
+            <End Role="Merchant" EntitySet="Merchant" />
+            <End Role="AutoReplyKeyword" EntitySet="AutoReplyKeyword" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AutoReplyMessage_AutoReplyRule" Association="Self.FK_AutoReplyMessage_AutoReplyRule">
+            <End Role="AutoReplyRule" EntitySet="AutoReplyRule" />
+            <End Role="AutoReplyMessage" EntitySet="AutoReplyMessage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AutoReplyMessage_MerchantId" Association="Self.FK_AutoReplyMessage_MerchantId">
+            <End Role="Merchant" EntitySet="Merchant" />
+            <End Role="AutoReplyMessage" EntitySet="AutoReplyMessage" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AutoReplyRegex_AutoReplyRule" Association="Self.FK_AutoReplyRegex_AutoReplyRule">
+            <End Role="AutoReplyRule" EntitySet="AutoReplyRule" />
+            <End Role="AutoReplyRegex" EntitySet="AutoReplyRegex" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AutoReplyRegex_MerchantId" Association="Self.FK_AutoReplyRegex_MerchantId">
+            <End Role="Merchant" EntitySet="Merchant" />
+            <End Role="AutoReplyRegex" EntitySet="AutoReplyRegex" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AutoReplyRule_MerchantId" Association="Self.FK_AutoReplyRule_MerchantId">
+            <End Role="Merchant" EntitySet="Merchant" />
+            <End Role="AutoReplyRule" EntitySet="AutoReplyRule" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CannedReplyAnswer_Merchant" Association="Self.FK_CannedReplyAnswer_Merchant">
+            <End Role="Merchant" EntitySet="Merchant" />
+            <End Role="CannedReplyAnswer" EntitySet="CannedReplyAnswer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CannedReplyQuestion_CannedReplyAnswer" Association="Self.FK_CannedReplyQuestion_CannedReplyAnswer">
+            <End Role="CannedReplyAnswer" EntitySet="CannedReplyAnswer" />
+            <End Role="CannedReplyQuestion" EntitySet="CannedReplyQuestion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CannedReplyQuestion_Merchant" Association="Self.FK_CannedReplyQuestion_Merchant">
+            <End Role="Merchant" EntitySet="Merchant" />
+            <End Role="CannedReplyQuestion" EntitySet="CannedReplyQuestion" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="cssmanagementdbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="CannedReplyAnswer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MerchantId" Type="Int64" Nullable="false" />
+          <Property Name="UserId" Type="Int64" />
+          <Property Name="CategoryName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ReplyContent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsAutoReplyEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="CreationTime" Type="DateTimeOffset" Nullable="false" Precision="7" />
+          <Property Name="CS_ReplyContent" Type="String" MaxLength="32" FixedLength="false" Unicode="true" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="CannedReplyQuestions" Relationship="Self.FK_CannedReplyQuestion_CannedReplyAnswer" FromRole="CannedReplyAnswer" ToRole="CannedReplyQuestion" />
+          <NavigationProperty Name="Merchant" Relationship="cssmanagementdbModel.FK_CannedReplyAnswer_Merchant" FromRole="CannedReplyAnswer" ToRole="Merchant" />
+          <Property Name="Frequency" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CannedReplyQuestion">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MerchantId" Type="Int64" Nullable="false" />
+          <Property Name="UserId" Type="Int64" />
+          <Property Name="CannedReplyAnswerId" Type="Int64" Nullable="false" />
+          <Property Name="Question" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CS_Question" Type="String" MaxLength="32" FixedLength="false" Unicode="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="CreationTime" Type="DateTimeOffset" Nullable="false" Precision="7" />
+          <NavigationProperty Name="CannedReplyAnswer" Relationship="Self.FK_CannedReplyQuestion_CannedReplyAnswer" FromRole="CannedReplyQuestion" ToRole="CannedReplyAnswer" />
+          <NavigationProperty Name="Merchant" Relationship="cssmanagementdbModel.FK_CannedReplyQuestion_Merchant" FromRole="CannedReplyQuestion" ToRole="Merchant" />
+        </EntityType>
+        <Association Name="FK_CannedReplyQuestion_CannedReplyAnswer">
+          <End Role="CannedReplyAnswer" Type="Self.CannedReplyAnswer" Multiplicity="1" />
+          <End Role="CannedReplyQuestion" Type="Self.CannedReplyQuestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CannedReplyAnswer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CannedReplyQuestion">
+              <PropertyRef Name="CannedReplyAnswerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="cssmanagementdbEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CannedReplyAnswers" EntityType="Self.CannedReplyAnswer" />
+          <EntitySet Name="CannedReplyQuestions" EntityType="Self.CannedReplyQuestion" />
+          <AssociationSet Name="FK_CannedReplyQuestion_CannedReplyAnswer" Association="Self.FK_CannedReplyQuestion_CannedReplyAnswer">
+            <End Role="CannedReplyAnswer" EntitySet="CannedReplyAnswers" />
+            <End Role="CannedReplyQuestion" EntitySet="CannedReplyQuestions" />
+          </AssociationSet>
+          <EntitySet Name="Merchants" EntityType="cssmanagementdbModel.Merchant" />
+          <AssociationSet Name="FK_CannedReplyAnswer_Merchant" Association="cssmanagementdbModel.FK_CannedReplyAnswer_Merchant">
+            <End Role="Merchant" EntitySet="Merchants" />
+            <End Role="CannedReplyAnswer" EntitySet="CannedReplyAnswers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CannedReplyQuestion_Merchant" Association="cssmanagementdbModel.FK_CannedReplyQuestion_Merchant">
+            <End Role="Merchant" EntitySet="Merchants" />
+            <End Role="CannedReplyQuestion" EntitySet="CannedReplyQuestions" />
+          </AssociationSet>
+          <EntitySet Name="AutoReplyKeywords" EntityType="cssmanagementdbModel.AutoReplyKeyword" />
+          <EntitySet Name="AutoReplyMessages" EntityType="cssmanagementdbModel.AutoReplyMessage" />
+          <EntitySet Name="AutoReplyRules" EntityType="cssmanagementdbModel.AutoReplyRule" />
+          <AssociationSet Name="FK_AutoReplyKeyword_AutoReplyRule" Association="cssmanagementdbModel.FK_AutoReplyKeyword_AutoReplyRule">
+            <End Role="AutoReplyRule" EntitySet="AutoReplyRules" />
+            <End Role="AutoReplyKeyword" EntitySet="AutoReplyKeywords" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AutoReplyKeyword_MerchantId" Association="cssmanagementdbModel.FK_AutoReplyKeyword_MerchantId">
+            <End Role="Merchant" EntitySet="Merchants" />
+            <End Role="AutoReplyKeyword" EntitySet="AutoReplyKeywords" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AutoReplyMessage_AutoReplyRule" Association="cssmanagementdbModel.FK_AutoReplyMessage_AutoReplyRule">
+            <End Role="AutoReplyRule" EntitySet="AutoReplyRules" />
+            <End Role="AutoReplyMessage" EntitySet="AutoReplyMessages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AutoReplyMessage_MerchantId" Association="cssmanagementdbModel.FK_AutoReplyMessage_MerchantId">
+            <End Role="Merchant" EntitySet="Merchants" />
+            <End Role="AutoReplyMessage" EntitySet="AutoReplyMessages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AutoReplyRule_MerchantId" Association="cssmanagementdbModel.FK_AutoReplyRule_MerchantId">
+            <End Role="Merchant" EntitySet="Merchants" />
+            <End Role="AutoReplyRule" EntitySet="AutoReplyRules" />
+          </AssociationSet>
+          <EntitySet Name="AutoReplyRegexes" EntityType="cssmanagementdbModel.AutoReplyRegex" />
+          <AssociationSet Name="FK_AutoReplyRegex_AutoReplyRule" Association="cssmanagementdbModel.FK_AutoReplyRegex_AutoReplyRule">
+            <End Role="AutoReplyRule" EntitySet="AutoReplyRules" />
+            <End Role="AutoReplyRegex" EntitySet="AutoReplyRegexes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AutoReplyRegex_MerchantId" Association="cssmanagementdbModel.FK_AutoReplyRegex_MerchantId">
+            <End Role="Merchant" EntitySet="Merchants" />
+            <End Role="AutoReplyRegex" EntitySet="AutoReplyRegexes" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Merchant">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LanguageCode" Type="String" MaxLength="2" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="CountryCode" Type="String" MaxLength="2" FixedLength="true" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="CannedReplyAnswers" Relationship="cssmanagementdbModel.FK_CannedReplyAnswer_Merchant" FromRole="Merchant" ToRole="CannedReplyAnswer" />
+          <NavigationProperty Name="CannedReplyQuestions" Relationship="cssmanagementdbModel.FK_CannedReplyQuestion_Merchant" FromRole="Merchant" ToRole="CannedReplyQuestion" />
+          <Property Name="TimeZoneCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="AutoReplyKeywords" Relationship="cssmanagementdbModel.FK_AutoReplyKeyword_MerchantId" FromRole="Merchant" ToRole="AutoReplyKeyword" />
+          <NavigationProperty Name="AutoReplyMessages" Relationship="cssmanagementdbModel.FK_AutoReplyMessage_MerchantId" FromRole="Merchant" ToRole="AutoReplyMessage" />
+          <NavigationProperty Name="AutoReplyRules" Relationship="cssmanagementdbModel.FK_AutoReplyRule_MerchantId" FromRole="Merchant" ToRole="AutoReplyRule" />
+          <NavigationProperty Name="AutoReplyRegexes" Relationship="cssmanagementdbModel.FK_AutoReplyRegex_MerchantId" FromRole="Merchant" ToRole="AutoReplyRegex" />
+        </EntityType>
+        <Association Name="FK_CannedReplyAnswer_Merchant">
+          <End Type="cssmanagementdbModel.Merchant" Role="Merchant" Multiplicity="1" />
+          <End Type="cssmanagementdbModel.CannedReplyAnswer" Role="CannedReplyAnswer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Merchant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CannedReplyAnswer">
+              <PropertyRef Name="MerchantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CannedReplyQuestion_Merchant">
+          <End Type="cssmanagementdbModel.Merchant" Role="Merchant" Multiplicity="1" />
+          <End Type="cssmanagementdbModel.CannedReplyQuestion" Role="CannedReplyQuestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Merchant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CannedReplyQuestion">
+              <PropertyRef Name="MerchantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="AutoReplyKeyword">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MerchantId" Type="Int64" Nullable="false" />
+          <Property Name="RuleId" Type="Int64" Nullable="false" />
+          <Property Name="Keyword" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="MatchType" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="AutoReplyRule" Relationship="cssmanagementdbModel.FK_AutoReplyKeyword_AutoReplyRule" FromRole="AutoReplyKeyword" ToRole="AutoReplyRule" />
+          <NavigationProperty Name="Merchant" Relationship="cssmanagementdbModel.FK_AutoReplyKeyword_MerchantId" FromRole="AutoReplyKeyword" ToRole="Merchant" />
+        </EntityType>
+        <EntityType Name="AutoReplyMessage">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MerchantId" Type="Int64" Nullable="false" />
+          <Property Name="RuleId" Type="Int64" Nullable="false" />
+          <Property Name="MsgType" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="MsgJson" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AutoReplyRule" Relationship="cssmanagementdbModel.FK_AutoReplyMessage_AutoReplyRule" FromRole="AutoReplyMessage" ToRole="AutoReplyRule" />
+          <NavigationProperty Name="Merchant" Relationship="cssmanagementdbModel.FK_AutoReplyMessage_MerchantId" FromRole="AutoReplyMessage" ToRole="Merchant" />
+        </EntityType>
+        <EntityType Name="AutoReplyRule">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MerchantId" Type="Int64" Nullable="false" />
+          <Property Name="Source" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="RuleType" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="ReplyAll" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="AutoReplyKeywords" Relationship="cssmanagementdbModel.FK_AutoReplyKeyword_AutoReplyRule" FromRole="AutoReplyRule" ToRole="AutoReplyKeyword" />
+          <NavigationProperty Name="AutoReplyMessages" Relationship="cssmanagementdbModel.FK_AutoReplyMessage_AutoReplyRule" FromRole="AutoReplyRule" ToRole="AutoReplyMessage" />
+          <NavigationProperty Name="Merchant" Relationship="cssmanagementdbModel.FK_AutoReplyRule_MerchantId" FromRole="AutoReplyRule" ToRole="Merchant" />
+          <NavigationProperty Name="AutoReplyRegexes" Relationship="cssmanagementdbModel.FK_AutoReplyRegex_AutoReplyRule" FromRole="AutoReplyRule" ToRole="AutoReplyRegex" />
+        </EntityType>
+        <Association Name="FK_AutoReplyKeyword_AutoReplyRule">
+          <End Type="cssmanagementdbModel.AutoReplyRule" Role="AutoReplyRule" Multiplicity="1" />
+          <End Type="cssmanagementdbModel.AutoReplyKeyword" Role="AutoReplyKeyword" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AutoReplyRule">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AutoReplyKeyword">
+              <PropertyRef Name="RuleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AutoReplyKeyword_MerchantId">
+          <End Type="cssmanagementdbModel.Merchant" Role="Merchant" Multiplicity="1" />
+          <End Type="cssmanagementdbModel.AutoReplyKeyword" Role="AutoReplyKeyword" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Merchant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AutoReplyKeyword">
+              <PropertyRef Name="MerchantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AutoReplyMessage_AutoReplyRule">
+          <End Type="cssmanagementdbModel.AutoReplyRule" Role="AutoReplyRule" Multiplicity="1" />
+          <End Type="cssmanagementdbModel.AutoReplyMessage" Role="AutoReplyMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AutoReplyRule">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AutoReplyMessage">
+              <PropertyRef Name="RuleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AutoReplyMessage_MerchantId">
+          <End Type="cssmanagementdbModel.Merchant" Role="Merchant" Multiplicity="1" />
+          <End Type="cssmanagementdbModel.AutoReplyMessage" Role="AutoReplyMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Merchant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AutoReplyMessage">
+              <PropertyRef Name="MerchantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AutoReplyRule_MerchantId">
+          <End Type="cssmanagementdbModel.Merchant" Role="Merchant" Multiplicity="1" />
+          <End Type="cssmanagementdbModel.AutoReplyRule" Role="AutoReplyRule" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Merchant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AutoReplyRule">
+              <PropertyRef Name="MerchantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="AutoReplyRegex">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MerchantId" Type="Int64" Nullable="false" />
+          <Property Name="RuleId" Type="Int64" Nullable="false" />
+          <Property Name="Regex" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AutoReplyRule" Relationship="cssmanagementdbModel.FK_AutoReplyRegex_AutoReplyRule" FromRole="AutoReplyRegex" ToRole="AutoReplyRule" />
+          <NavigationProperty Name="Merchant" Relationship="cssmanagementdbModel.FK_AutoReplyRegex_MerchantId" FromRole="AutoReplyRegex" ToRole="Merchant" />
+        </EntityType>
+        <Association Name="FK_AutoReplyRegex_AutoReplyRule">
+          <End Type="cssmanagementdbModel.AutoReplyRule" Role="AutoReplyRule" Multiplicity="1" />
+          <End Type="cssmanagementdbModel.AutoReplyRegex" Role="AutoReplyRegex" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AutoReplyRule">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AutoReplyRegex">
+              <PropertyRef Name="RuleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AutoReplyRegex_MerchantId">
+          <End Type="cssmanagementdbModel.Merchant" Role="Merchant" Multiplicity="1" />
+          <End Type="cssmanagementdbModel.AutoReplyRegex" Role="AutoReplyRegex" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Merchant">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AutoReplyRegex">
+              <PropertyRef Name="MerchantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="cssmanagementdbModelStoreContainer" CdmEntityContainer="cssmanagementdbEntities">
+          <EntitySetMapping Name="CannedReplyAnswers">
+            <EntityTypeMapping TypeName="cssmanagementdbModel.CannedReplyAnswer">
+              <MappingFragment StoreEntitySet="CannedReplyAnswer">
+                <ScalarProperty Name="Frequency" ColumnName="Frequency" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="MerchantId" ColumnName="MerchantId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+                <ScalarProperty Name="ReplyContent" ColumnName="ReplyContent" />
+                <ScalarProperty Name="IsAutoReplyEnabled" ColumnName="IsAutoReplyEnabled" />
+                <ScalarProperty Name="CreationTime" ColumnName="CreationTime" />
+                <ScalarProperty Name="CS_ReplyContent" ColumnName="CS_ReplyContent" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CannedReplyQuestions">
+            <EntityTypeMapping TypeName="cssmanagementdbModel.CannedReplyQuestion">
+              <MappingFragment StoreEntitySet="CannedReplyQuestion">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="MerchantId" ColumnName="MerchantId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="CannedReplyAnswerId" ColumnName="CannedReplyAnswerId" />
+                <ScalarProperty Name="Question" ColumnName="Question" />
+                <ScalarProperty Name="CS_Question" ColumnName="CS_Question" />
+                <ScalarProperty Name="CreationTime" ColumnName="CreationTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Merchants">
+            <EntityTypeMapping TypeName="cssmanagementdbModel.Merchant">
+              <MappingFragment StoreEntitySet="Merchant">
+                <ScalarProperty Name="TimeZoneCode" ColumnName="TimeZoneCode" />
+                <ScalarProperty Name="CountryCode" ColumnName="CountryCode" />
+                <ScalarProperty Name="LanguageCode" ColumnName="LanguageCode" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AutoReplyKeywords">
+            <EntityTypeMapping TypeName="cssmanagementdbModel.AutoReplyKeyword">
+              <MappingFragment StoreEntitySet="AutoReplyKeyword">
+                <ScalarProperty Name="MatchType" ColumnName="MatchType" />
+                <ScalarProperty Name="Keyword" ColumnName="Keyword" />
+                <ScalarProperty Name="RuleId" ColumnName="RuleId" />
+                <ScalarProperty Name="MerchantId" ColumnName="MerchantId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AutoReplyMessages">
+            <EntityTypeMapping TypeName="cssmanagementdbModel.AutoReplyMessage">
+              <MappingFragment StoreEntitySet="AutoReplyMessage">
+                <ScalarProperty Name="MsgJson" ColumnName="MsgJson" />
+                <ScalarProperty Name="MsgType" ColumnName="MsgType" />
+                <ScalarProperty Name="RuleId" ColumnName="RuleId" />
+                <ScalarProperty Name="MerchantId" ColumnName="MerchantId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AutoReplyRules">
+            <EntityTypeMapping TypeName="cssmanagementdbModel.AutoReplyRule">
+              <MappingFragment StoreEntitySet="AutoReplyRule">
+                <ScalarProperty Name="ReplyAll" ColumnName="ReplyAll" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="RuleType" ColumnName="RuleType" />
+                <ScalarProperty Name="Source" ColumnName="Source" />
+                <ScalarProperty Name="MerchantId" ColumnName="MerchantId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AutoReplyRegexes">
+            <EntityTypeMapping TypeName="cssmanagementdbModel.AutoReplyRegex">
+              <MappingFragment StoreEntitySet="AutoReplyRegex">
+                <ScalarProperty Name="Regex" ColumnName="Regex" />
+                <ScalarProperty Name="RuleId" ColumnName="RuleId" />
+                <ScalarProperty Name="MerchantId" ColumnName="MerchantId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

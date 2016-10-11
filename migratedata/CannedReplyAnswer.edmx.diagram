@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="5b2e3e375d22463b95b5e0f5b6cfb4b3" Name="Diagram1">
+        <EntityTypeShape EntityType="cssmanagementdbModel.CannedReplyAnswer" Width="1.5" PointX="0.75" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="cssmanagementdbModel.CannedReplyQuestion" Width="1.5" PointX="4.625" PointY="2.625" IsExpanded="true" />
+        <AssociationConnector Association="cssmanagementdbModel.FK_CannedReplyQuestion_CannedReplyAnswer" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="cssmanagementdbModel.Merchant" Width="1.5" PointX="1.125" PointY="4" />
+        <AssociationConnector Association="cssmanagementdbModel.FK_CannedReplyAnswer_Merchant" />
+        <AssociationConnector Association="cssmanagementdbModel.FK_CannedReplyQuestion_Merchant" />
+        <EntityTypeShape EntityType="cssmanagementdbModel.AutoReplyKeyword" Width="1.5" PointX="8.625" PointY="7.5" />
+        <EntityTypeShape EntityType="cssmanagementdbModel.AutoReplyMessage" Width="1.5" PointX="5.625" PointY="7.5" />
+        <EntityTypeShape EntityType="cssmanagementdbModel.AutoReplyRule" Width="1.5" PointX="3.375" PointY="10.625" />
+        <AssociationConnector Association="cssmanagementdbModel.FK_AutoReplyKeyword_AutoReplyRule" />
+        <AssociationConnector Association="cssmanagementdbModel.FK_AutoReplyKeyword_MerchantId" />
+        <AssociationConnector Association="cssmanagementdbModel.FK_AutoReplyMessage_AutoReplyRule" />
+        <AssociationConnector Association="cssmanagementdbModel.FK_AutoReplyMessage_MerchantId" />
+        <AssociationConnector Association="cssmanagementdbModel.FK_AutoReplyRule_MerchantId" />
+        <EntityTypeShape EntityType="cssmanagementdbModel.AutoReplyRegex" Width="2" PointX="6.5" PointY="10.75" />
+        <AssociationConnector Association="cssmanagementdbModel.FK_AutoReplyRegex_AutoReplyRule" />
+        <AssociationConnector Association="cssmanagementdbModel.FK_AutoReplyRegex_MerchantId" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
